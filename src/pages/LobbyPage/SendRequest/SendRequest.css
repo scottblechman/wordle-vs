@@ -1,0 +1,33 @@
+.find-user-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 4em 1em;
+  text-align: center;
+}
+
+.find-user-form {
+  display: flex;
+  justify-content: center;
+}
+
+.find-user-input {
+  font-size: 1em;
+  border: 0;
+  border-bottom: 1px solid #d3d6da;
+  background-color: #e9e9ed;
+}
+
+.find-user-input:focus {
+  outline: none;
+}
+
+.find-user-submit {
+  width: 6em;
+  height: 3em;
+  margin: 0 0.5em;
+}
+
+.find-user-error {
+  color: red;
+}

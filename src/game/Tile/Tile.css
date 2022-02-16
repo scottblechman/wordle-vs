@@ -1,0 +1,19 @@
+.tile {
+  aspect-ratio: 1;
+  color: white;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.tile-unfilled {
+  color: black;
+  border: 2px solid #d3d6da;
+}
+
+.tile-filled {
+  color: black;
+  border: 2px solid #878a8c;
+}

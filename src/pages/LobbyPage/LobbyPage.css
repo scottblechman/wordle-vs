@@ -1,0 +1,10 @@
+.null-state {
+  display: flex;
+  justify-content: center;
+  margin: 0 1em;
+  text-align: center;
+}
+
+h4 {
+  text-align: center;
+}

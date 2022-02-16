@@ -1,0 +1,14 @@
+.lobby {
+  border-bottom: 1px solid #d3d6da;
+  margin: 1em;
+  padding: 0.5em 0;
+}
+
+.lobby-opponent {
+  font-size: 1.33em;
+  font-weight: 600;
+}
+
+.lobby-status {
+  color: #878a8c;
+}

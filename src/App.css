@@ -1,0 +1,23 @@
+.wrong-letter {
+  background-color: rgb(120, 124, 126);
+}
+
+.wrong-position {
+  background-color: rgb(201, 180, 88);
+}
+
+.correct {
+  background-color: rgb(106, 170, 100);
+}
+
+.wrong-letter-fg {
+  color: rgb(120, 124, 126);
+}
+
+.wrong-position-fg {
+  color: rgb(201, 180, 88);
+}
+
+.correct-fg {
+  color: rgb(106, 170, 100);
+}

@@ -1,0 +1,42 @@
+.keyboard {
+  padding: 0.25em 0;
+  margin: 3.5em 0;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+}
+
+.filled {
+  color: white;
+}
+
+.icon-back {
+  height: 1.5rem;
+  width: 1.5rem;
+  align-self: center;
+}
+
+.undefined-fg {
+  color: rgb(239, 239, 239);
+}
+
+button {
+  font-family: inherit;
+  font-size: 1em;
+  margin: 0.1875em;
+  padding: 1em 0.625em;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+#enter {
+  font-size: 0.8em;
+}
+
+#backspace {
+  width: 2.5em;
+  display: inline-flex;
+}
