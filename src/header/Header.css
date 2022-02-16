@@ -6,7 +6,42 @@
   border-bottom: 2px solid #d3d6da;
 }
 
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .icon {
   height: 1.5rem;
   width: 1.5rem;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  position: absolute;
+  margin-right: 1em;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 0 1em;
+  z-index: 1;
+  right: -1em;
+  top: 2em;
+}
+
+.hidden {
+  display: none;
+}
+.visible {
+  display: block;
+}
+
+.signout {
+  border-top: 1px solid #d3d6da;
+  padding-top: 1em;
 }

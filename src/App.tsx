@@ -229,7 +229,7 @@ function App() {
     <FirebaseContext.Provider value={firebase.f}>
       {uid === null && <Login signIn={() => signInWithRedirect(auth, provider)} />}
       {user !== undefined && <div>
-        <Header user={user} gameId={gameId} returnToLobby={() => setLobbyId(undefined)} />
+        <Header user={user} lobbyId={lobbyId ?? ''} returnToLobby={() => setLobbyId(undefined)} />
         {getContentPage()}
       </div>}
     </FirebaseContext.Provider>

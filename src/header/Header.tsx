@@ -1,18 +1,22 @@
 import { signOut } from 'firebase/auth';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FirebaseContext } from '../App';
 import { UserDocument } from '../types/UserDocument';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import './Header.css';
+import { LeftArrowIcon, SettingsIcon } from '../assets';
 
 interface HeaderProps {
   user: UserDocument,
-  gameId: string | undefined,
+  lobbyId: string,
   returnToLobby: any,
 }
 
 function Header(props: HeaderProps) {
 
   const firebase = useContext(FirebaseContext);
+
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const onSignOut = () => {
     signOut(firebase.auth).then(() => {
@@ -24,15 +28,20 @@ function Header(props: HeaderProps) {
 
   return (
     <div className='header'>
-      <div onClick={props.returnToLobby}>
-        <svg xmlns='http://www.w3.org/2000/svg' className='icon' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-          {props.gameId !== '' && <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M10 19l-7-7m0 0l7-7m-7 7h18' />}
-        </svg>
+      <div className='icon-container' onClick={props.returnToLobby}>
+        {props.lobbyId !== '' ? <LeftArrowIcon /> : <div className='icon' />}
       </div>
-      <p onClick={onSignOut}>{props.user.name !== undefined ? `Logged in as ${props.user.name}#${props.user.lobbyId}` : ''}</p>
-      <svg xmlns='http://www.w3.org/2000/svg' className='icon' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z' />
-      </svg>
+      <CopyToClipboard text={props.user.name !== undefined ? `${props.user.name}#${props.user.lobbyId}` : ''}>
+        <p>{props.user.name !== undefined ? `Logged in as ${props.user.name}#${props.user.lobbyId}` : ''}</p>
+      </CopyToClipboard>
+      <div className={'dropdown'}>
+        <div className='icon-container' tabIndex={0} onClick={() => {const v = dropdownVisible; setDropdownVisible(!v)}} onBlur={() => setDropdownVisible(false)}>
+          <SettingsIcon />
+        </div>
+        <div className={`dropdown-content ${dropdownVisible ? 'visible' : 'hidden'}`}>
+          <p className='signout' onClick={onSignOut}>Sign out</p>
+        </div>
+      </div>
     </div>
   );
 }
