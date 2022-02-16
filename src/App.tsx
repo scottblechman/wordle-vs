@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getFirestore, limit, onSnapshot, query, setDoc, Unsubscribe, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getFirestore, limit, onSnapshot, query, setDoc, Unsubscribe, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, getRedirectResult, signInWithRedirect  } from 'firebase/auth';
 import { useState, useEffect, useRef } from 'react';
 
@@ -45,10 +45,44 @@ const firebase = {
 export const FirebaseContext = React.createContext(firebase.f);
 
 async function createNewUser (uid: string, refId: string) {
-  const newLobbyId = Math.floor(Math.random() * 1000).toString().padStart(4, '0');
   const result = await getRedirectResult(auth);
-  const userName = result?.user.displayName?.split(' ')[0] ?? result?.user.displayName ?? 'Anonymous';
-  return new UserDocument([], newLobbyId, userName, [], [], uid, refId);
+  const { username, tag } = await getDefaultUserName(result?.user?.displayName);
+  return new UserDocument([], tag, username, [], [], uid, refId);
+}
+
+async function getDefaultUserName (displayName: string | null | undefined) {
+  const defaultTag = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  let username = `Anonymous${defaultTag}`;
+  if (!(displayName === undefined || displayName === null)) {
+    const tokens = displayName.split(' ');
+    if (tokens.length < 2) {
+      username = displayName;
+    } else {
+      username = `${tokens[0]}${tokens[1].charAt(0)}`;
+    }
+  }
+
+  const tag = await getTag(username);
+
+  return { username: username, tag: tag };
+}
+
+async function getTag (username: string) {
+  let tag = 1;
+  const tagRef = doc(db, 'tags', username);
+  const tagSnap = await getDoc(tagRef);
+
+  if (tagSnap.exists()) {
+    tag = tagSnap.data().nextTag;
+    await setDoc(doc(db, 'tags', username), {
+      nextTag: tag + 1
+    });
+  } else {
+    await setDoc(doc(db, 'tags', username), {
+      nextTag: 2
+    });
+  }
+  return Math.floor(tag).toString().padStart(4, '0');
 }
 
 function App() {
