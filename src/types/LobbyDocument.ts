@@ -4,18 +4,6 @@ interface Player {
 }
 
 class LobbyDocument {
-  // userDocId of the lobby creator (one who sent the request)
-  //creatorId: string;
-
-  // Name of the lobby creator
-  //creatorName: string;
-
-  // userDocId of the lobby responder (one who received the request)
-  //responderId: string;
-
-  // Name of the lobby responder
-  //responderName: string;
-
   // Players in the game
   players: Player[];
 
@@ -31,11 +19,7 @@ class LobbyDocument {
   // ID of this document in Firestore
   lobbyDocId: string;
 
-  constructor (/*creatorId: string, creatorName: string, responderId: string, responderName: string,*/ players: Player[], activePlayer: number, gameId: string, playerId: string, lobbyDocId: string) {
-    //this.creatorId = creatorId;
-    //this.creatorName = creatorName;
-    //this.responderId = responderId;
-    //this.responderName = responderName;
+  constructor (players: Player[], activePlayer: number, gameId: string, playerId: string, lobbyDocId: string) {
     this.players = players;
     this.activePlayer = activePlayer;
     this.gameId = gameId;
@@ -65,10 +49,6 @@ class LobbyDocument {
 const lobbyConverter = {
   toFirestore: (lobby: LobbyDocument) => {
       return {
-        //creatorId: lobby.creatorId,
-        //creatorName: lobby.creatorName,
-        //responderId: lobby.responderId,
-        //responderName: lobby.responderName,
         players: lobby.players,
         activePlayer: lobby.activePlayer,
         gameId: lobby.gameId,
@@ -78,7 +58,7 @@ const lobbyConverter = {
   },
   fromFirestore: (snapshot: { data: (arg0: any) => any; }, options: any) => {
       const data = snapshot.data(options);
-      return new LobbyDocument(/*data.creatorId, data.creatorName, data.responderId, data.responderName,*/ data.players, data.activePlayer, data.gameId, data.playerId, data.lobbyDocId);
+      return new LobbyDocument(data.players, data.activePlayer, data.gameId, data.playerId, data.lobbyDocId);
   }
 };
 

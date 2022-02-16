@@ -20,27 +20,10 @@ function Requests(props: RequestsProps) {
       // Remove the request before adding lobby
       reject(senderId);
 
-      /*const q = query(collection(firebase.db, 'lobbies').withConverter(lobbyConverter), where('players', 'array-contains', {playerDocId: props.user.userDocId, playerName: props.user.toString()}));
-      const querySnapshot = await getDocs(q);
-      let newLobbyId = undefined;
-      if (querySnapshot.empty) {
-        const newLobbyRef = doc(collection(firebase.db, 'lobbies')).withConverter(lobbyConverter);
-        const lobby = new LobbyDocument(senderId, senderName, props.user.userDocId, props.user.toString(), '', senderId, newLobbyRef.id);
-        await setDoc(newLobbyRef, lobby);
-        newLobbyId = newLobbyRef.id;
-      } else {
-        querySnapshot.forEach((doc) => {
-          newLobbyId = doc.data().lobbyDocId;
-        });
-      }
-      if (newLobbyId !== undefined) {
-        await updateLobbies(senderId, newLobbyId);
-        await updateLobbies(props.user.userDocId, newLobbyId);
-        props.setLobby(newLobbyId);
-      }*/
+
       const newLobbyRef = doc(collection(firebase.db, 'lobbies')).withConverter(lobbyConverter);
       // make this user the active player, since the next action is to start a game
-      const lobby = new LobbyDocument([{playerDocId: senderId, playerName: senderName}, {playerDocId: props.user.userDocId, playerName: props.user.toString()}], 0, '', senderId, newLobbyRef.id);
+      const lobby = new LobbyDocument([{playerDocId: senderId, playerName: senderName.split('#')[0]}, {playerDocId: props.user.userDocId, playerName: props.user.name}], 0, '', senderId, newLobbyRef.id);
       await setDoc(newLobbyRef, lobby);
       await updateLobbies(senderId, newLobbyRef.id);
       await updateLobbies(props.user.userDocId, newLobbyRef.id);
