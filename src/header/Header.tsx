@@ -31,16 +31,18 @@ function Header(props: HeaderProps) {
       <div className='icon-container' onClick={props.returnToLobby}>
         {props.lobbyId !== '' ? <LeftArrowIcon /> : <div className='icon' />}
       </div>
-      <CopyToClipboard text={props.user.name !== undefined ? `${props.user.name}#${props.user.lobbyId}` : ''}>
-        <p>{props.user.name !== undefined ? `Logged in as ${props.user.name}#${props.user.lobbyId}` : ''}</p>
-      </CopyToClipboard>
+      <h4>WORDLE VS</h4>
       <div className={'dropdown'}>
-        <div className='icon-container' tabIndex={0} onClick={() => {const v = dropdownVisible; setDropdownVisible(!v)}} onBlur={() => setDropdownVisible(false)}>
+        <div className='icon-container' onClick={() => setDropdownVisible(!dropdownVisible)}>
           <SettingsIcon />
         </div>
-        <div className={`dropdown-content ${dropdownVisible ? 'visible' : 'hidden'}`}>
+        {dropdownVisible && <div className='dropdown-content'>
+          <p>Signed in as</p>
+          <CopyToClipboard text={props.user.name !== undefined ? `${props.user.name}#${props.user.lobbyId}` : ''}>
+            <h5>{props.user.toString()}</h5>
+          </CopyToClipboard>
           <p className='signout' onClick={onSignOut}>Sign out</p>
-        </div>
+        </div>}
       </div>
     </div>
   );

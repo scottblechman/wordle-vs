@@ -23,6 +23,7 @@
 }
 
 .dropdown-content {
+  display: block;
   position: absolute;
   margin-right: 1em;
   background-color: #f9f9f9;
@@ -34,14 +35,11 @@
   top: 2em;
 }
 
-.hidden {
-  display: none;
-}
-.visible {
-  display: block;
-}
-
 .signout {
   border-top: 1px solid #d3d6da;
   padding-top: 1em;
+}
+
+h5 {
+  margin: 0;
 }
