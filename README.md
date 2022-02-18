@@ -1,6 +1,5 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Wordle VS
+[![Deploy to Firebase](https://github.com/scottblechman/wordle-vs/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/scottblechman/wordle-vs/actions/workflows/firebase-hosting-merge.yml)
 
 ## Available Scripts
 
