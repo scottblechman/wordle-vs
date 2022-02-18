@@ -106,7 +106,7 @@ function GamePage(props: GamePageProps) {
   };
 
   return (
-    <div>
+    <div className='container'>
       <div className='frame'>
         <div>
           {props.game === undefined && <h4>Waiting for game to start&hellip;</h4>}
@@ -114,7 +114,7 @@ function GamePage(props: GamePageProps) {
           {props.game !== undefined && <Keyboard addLetter={addLetter} backspace={backspace} enter={enter} letterStates={keyStates} observer={props.observer} />}
         </div>
       </div>
-      <Modal
+      {<Modal
         isOpen={!props.observer && ((attempts.filter(a => a === target).length > 0) || ((attempts.filter(a => a === target).length === 0) && attempts.length === 6))}
         onRequestClose={newGame}
         style={modalStyle}
@@ -122,7 +122,7 @@ function GamePage(props: GamePageProps) {
       >
         <h2>You {(attempts.filter(a => a === target).length > 0) ? 'won' : 'lost'}</h2>
         <button onClick={newGame}>New Game</button>
-      </Modal>
+      </Modal>}
     </div>
   );
 }

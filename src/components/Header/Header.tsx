@@ -49,7 +49,7 @@ function Header(props: HeaderProps) {
         <div className='icon-container' onClick={props.returnToLobby}>
           {props.lobbyId !== '' ? <LeftArrowIcon /> : <div className='icon' />}
         </div>
-        <h4>WORDLE VS</h4>
+        <h2>WORDLE VS</h2>
         <div className='dropdown' ref={dropdownRef}>
           <div className='icon-container'onClick={() => setDropdownVisible(!dropdownVisible)}>
             <SettingsIcon />
