@@ -1,10 +1,10 @@
 import { signOut } from 'firebase/auth';
-import { useContext, useState } from 'react';
-import { FirebaseContext } from '../App';
-import { UserDocument } from '../types/UserDocument';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { FirebaseContext } from '../../App';
+import { UserDocument } from '../../types/UserDocument';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import './Header.css';
-import { LeftArrowIcon, SettingsIcon } from '../assets';
+import { LeftArrowIcon, SettingsIcon } from '../../assets';
 
 interface HeaderProps {
   user: UserDocument,
@@ -17,6 +17,21 @@ function Header(props: HeaderProps) {
   const firebase = useContext(FirebaseContext);
 
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    }
+}, [dropdownRef]);
 
   const onSignOut = () => {
     signOut(firebase.auth).then(() => {
@@ -32,8 +47,8 @@ function Header(props: HeaderProps) {
         {props.lobbyId !== '' ? <LeftArrowIcon /> : <div className='icon' />}
       </div>
       <h4>WORDLE VS</h4>
-      <div className={'dropdown'}>
-        <div className='icon-container' onClick={() => setDropdownVisible(!dropdownVisible)}>
+      <div className='dropdown' ref={dropdownRef}>
+        <div className='icon-container'onClick={() => setDropdownVisible(!dropdownVisible)}>
           <SettingsIcon />
         </div>
         {dropdownVisible && <div className='dropdown-content'>

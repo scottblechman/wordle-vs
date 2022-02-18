@@ -8,7 +8,7 @@ import './App.css';
 import Game from './game/Game';
 import Login from './login/Login';
 import { LobbyPage, NewGamePage } from './pages';
-import Header from './header/Header';
+import { Header } from './components';
 import { gameConverter, GameDocument } from './types/GameDocument';
 import Settings from './types/Settings';
 import React from 'react';
