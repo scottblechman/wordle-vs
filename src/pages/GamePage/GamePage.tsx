@@ -2,18 +2,18 @@ import { useState, useEffect, useContext } from 'react';
 import Board from './Board/Board';
 import Keyboard from './Keyboard/Keyboard';
 
-import './Game.css';
+import './GamePage.css';
 import LetterState from './LetterState';
 import updateKeyStates from './getKeyStates';
-import { GameDocument } from '../types/GameDocument';
-import Settings from '../types/Settings';
+import { GameDocument } from '../../types/GameDocument';
+import Settings from '../../types/Settings';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { FirebaseContext } from '../App';
+import { FirebaseContext } from '../../App';
 import Modal from 'react-modal';
-import { lobbyConverter } from '../types/LobbyDocument';
+import { lobbyConverter } from '../../types/LobbyDocument';
 import words from 'an-array-of-english-words';
 
-interface GameProps {
+interface GamePageProps {
   game: GameDocument | undefined,
   gameId: string,
   lobbyId: string,
@@ -22,7 +22,7 @@ interface GameProps {
   setGameId: any,
 }
 
-function Game(props: GameProps) {
+function GamePage(props: GamePageProps) {
 
   const firebase = useContext(FirebaseContext);
 
@@ -78,13 +78,8 @@ function Game(props: GameProps) {
     }
   };
 
-  const afterOpenModal = () => {
-    // references are now sync'd and can be accessed.
-    //subtitle.style.color = '#f00';
-  };
-
   
-  const customStyles = {
+  const modalStyle = {
     content: {
       top: '50%',
       left: '50%',
@@ -100,17 +95,12 @@ function Game(props: GameProps) {
       if (props.lobbyId !== '') {
         const lobbyRef = doc(firebase.db, 'lobbies', props.lobbyId).withConverter(lobbyConverter);
         const lobbySnap = await getDoc(lobbyRef);
-        //const lobbyPlayerId = lobbySnap.data()?.playerId;
-        //const lobbyCreatorId = lobbySnap.data()?.creatorId;
-        //const lobbyResponderId = lobbySnap.data()?.responderId;
 
         const activePlayer = lobbySnap.data()?.activePlayer ?? 0;
         await updateDoc(lobbyRef, {
           gameId: '',
-          //playerId: (lobbyPlayerId === lobbyCreatorId ? lobbyResponderId : lobbyCreatorId)
           activePlayer: activePlayer === 0 ? 1 : 0
         });
-        //props.setGameId(undefined);
       }
     })();
   };
@@ -126,10 +116,9 @@ function Game(props: GameProps) {
       </div>
       <Modal
         isOpen={!props.observer && ((attempts.filter(a => a === target).length > 0) || ((attempts.filter(a => a === target).length === 0) && attempts.length === 6))}
-        onAfterOpen={afterOpenModal}
         onRequestClose={newGame}
-        style={customStyles}
-        contentLabel="Example Modal"
+        style={modalStyle}
+        contentLabel='Game Results'
       >
         <h2>You {(attempts.filter(a => a === target).length > 0) ? 'won' : 'lost'}</h2>
         <button onClick={newGame}>New Game</button>
@@ -138,4 +127,4 @@ function Game(props: GameProps) {
   );
 }
 
-export default Game;
+export default GamePage;

@@ -44,6 +44,16 @@ class LobbyDocument {
   getOpponentName(userId: string) {
     return this.players.filter(p => p.playerDocId !== userId)[0].playerName;
   }
+
+  /**
+   * Updates a player name
+   * @param userId userDocId of the user to change
+   * @param username the new username
+   */
+  updateName(userId: string, username: string) {
+    const index = this.players[0].playerDocId === userId ? 0 : 1;
+    this.players[index].playerName = username;
+  }
 }
 
 const lobbyConverter = {

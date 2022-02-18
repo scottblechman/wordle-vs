@@ -1,0 +1,27 @@
+.button-row {
+  display: flex;
+  justify-content: right;
+  padding-top: 1em;
+}
+
+.button-group {
+  display: flex;
+}
+
+input {
+  font-size: 1.25em;
+  border: 0;
+  border-bottom: 1px solid #d3d6da;
+  background-color: #e9e9ed;
+  margin: 0.25em 0;
+  padding: 0.25em;
+}
+
+input:focus {
+  outline: none;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}

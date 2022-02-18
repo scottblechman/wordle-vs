@@ -5,6 +5,7 @@ import { UserDocument } from '../../types/UserDocument';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import './Header.css';
 import { LeftArrowIcon, SettingsIcon } from '../../assets';
+import SettingsComponent from './SettingsComponent/SettingsComponent';
 
 interface HeaderProps {
   user: UserDocument,
@@ -17,6 +18,7 @@ function Header(props: HeaderProps) {
   const firebase = useContext(FirebaseContext);
 
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,23 +44,27 @@ function Header(props: HeaderProps) {
   };
 
   return (
-    <div className='header'>
-      <div className='icon-container' onClick={props.returnToLobby}>
-        {props.lobbyId !== '' ? <LeftArrowIcon /> : <div className='icon' />}
-      </div>
-      <h4>WORDLE VS</h4>
-      <div className='dropdown' ref={dropdownRef}>
-        <div className='icon-container'onClick={() => setDropdownVisible(!dropdownVisible)}>
-          <SettingsIcon />
+    <div>
+      <div className='header'>
+        <div className='icon-container' onClick={props.returnToLobby}>
+          {props.lobbyId !== '' ? <LeftArrowIcon /> : <div className='icon' />}
         </div>
-        {dropdownVisible && <div className='dropdown-content'>
-          <p>Signed in as</p>
-          <CopyToClipboard text={props.user.name !== undefined ? `${props.user.name}#${props.user.lobbyId}` : ''}>
-            <h5>{props.user.toString()}</h5>
-          </CopyToClipboard>
-          <p className='signout' onClick={onSignOut}>Sign out</p>
-        </div>}
+        <h4>WORDLE VS</h4>
+        <div className='dropdown' ref={dropdownRef}>
+          <div className='icon-container'onClick={() => setDropdownVisible(!dropdownVisible)}>
+            <SettingsIcon />
+          </div>
+          {dropdownVisible && <div className='dropdown-content'>
+            <p>Signed in as</p>
+            <CopyToClipboard text={props.user.name !== undefined ? `${props.user.name}#${props.user.lobbyId}` : ''}>
+              <h5>{props.user.toString()}</h5>
+            </CopyToClipboard>
+            <p className='section-begin' onClick={() => {setSettingsOpen(true); setDropdownVisible(false)}}>Settings</p>
+            <p onClick={onSignOut}>Sign out</p>
+          </div>}
+        </div>
       </div>
+      <SettingsComponent open={settingsOpen} setOpen={setSettingsOpen} user={props.user} />
     </div>
   );
 }

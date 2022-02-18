@@ -29,13 +29,14 @@
   background-color: #f9f9f9;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 4px;
   padding: 0 1em;
   z-index: 1;
   right: -1em;
   top: 2em;
 }
 
-.signout {
+.section-begin {
   border-top: 1px solid #d3d6da;
   padding-top: 1em;
 }

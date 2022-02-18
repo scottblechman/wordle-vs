@@ -1,19 +1,19 @@
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getFirestore, limit, onSnapshot, query, setDoc, Unsubscribe, where } from 'firebase/firestore';
+import { collection, doc, getDocs, getFirestore, limit, onSnapshot, query, setDoc, Unsubscribe, updateDoc, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, getRedirectResult, signInWithRedirect  } from 'firebase/auth';
 import { useState, useEffect, useRef } from 'react';
 
 
 import './App.css';
-import Game from './game/Game';
 import Login from './login/Login';
-import { LobbyPage, NewGamePage } from './pages';
+import { LobbyPage, NewGamePage, GamePage } from './pages';
 import { Header } from './components';
 import { gameConverter, GameDocument } from './types/GameDocument';
 import Settings from './types/Settings';
 import React from 'react';
 import { userConverter, UserDocument } from './types/UserDocument';
 import { lobbyConverter, LobbyDocument } from './types/LobbyDocument';
+import { createUsername } from './util';
 
 initializeApp({
   apiKey: "AIzaSyDEycDoABJL76Fl2S4hiY5Rn8BSJ-y05cA",
@@ -46,49 +46,15 @@ export const FirebaseContext = React.createContext(firebase.f);
 
 async function createNewUser (uid: string, refId: string) {
   const result = await getRedirectResult(auth);
-  const { username, tag } = await getDefaultUserName(result?.user?.displayName);
+  const { username, tag } = await createUsername(result?.user?.displayName, db);
   return new UserDocument([], tag, username, [], [], uid, refId);
-}
-
-async function getDefaultUserName (displayName: string | null | undefined) {
-  const defaultTag = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-  let username = `Anonymous${defaultTag}`;
-  if (!(displayName === undefined || displayName === null)) {
-    const tokens = displayName.split(' ');
-    if (tokens.length < 2) {
-      username = displayName;
-    } else {
-      username = `${tokens[0]}${tokens[1].charAt(0)}`;
-    }
-  }
-
-  const tag = await getTag(username);
-
-  return { username: username, tag: tag };
-}
-
-async function getTag (username: string) {
-  let tag = 1;
-  const tagRef = doc(db, 'tags', username);
-  const tagSnap = await getDoc(tagRef);
-
-  if (tagSnap.exists()) {
-    tag = tagSnap.data().nextTag;
-    await setDoc(doc(db, 'tags', username), {
-      nextTag: tag + 1
-    });
-  } else {
-    await setDoc(doc(db, 'tags', username), {
-      nextTag: 2
-    });
-  }
-  return Math.floor(tag).toString().padStart(4, '0');
 }
 
 function App() {
 
   const [uid, setUid] = useState<string | null | undefined>(undefined);
   const [user, setUser] = useState<UserDocument | undefined>(undefined);
+  const [username, setUsername] = useState<string | undefined>(undefined);  // Tracks 
   const userUnsubscribe = useRef<Unsubscribe | undefined>(undefined);
 
   const [lobbyId, setLobbyId] = useState<string | undefined>(undefined);
@@ -130,8 +96,9 @@ function App() {
           // We don't need setUser here, since setDoc invokes the callback and goes to the else branch.
           await setDoc(newUserRef, u);
         } else {
-          querySnapshot.forEach((doc) => {
-            setUser(doc.data());
+          querySnapshot.forEach((userDoc) => {
+            setUser(userDoc.data());
+            setUsername(userDoc.data().name);
           });
         }
       });
@@ -145,6 +112,22 @@ function App() {
       }
     }
   }, [uid]);
+
+  useEffect(() => {
+    (async function () {
+      if (user && user.name !== username && user.lobbies.length > 0) {
+        const q = query(collection(db, 'lobbies').withConverter(lobbyConverter), where('lobbyDocId', 'in', user.lobbies));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach(async (lobby) => {
+          const newLobby = lobby.data();
+          newLobby.updateName(user.userDocId, user.name);
+          await updateDoc(doc(db, 'lobbies', lobby.data().lobbyDocId), {
+            players: newLobby.players
+          });
+        });
+      }
+    })();
+  }, [user, username]);
 
   // lobby selected/unselected - set active lobby listener
   useEffect(() => {
@@ -220,7 +203,7 @@ function App() {
       if (game === undefined && !activeLobby.isActivePlayer(user.userDocId)) {
         return <NewGamePage settings={settings} lobbyId={lobbyId} setLobbyId={setLobbyId} setGameId={setGameId} />;
       } else {
-        return <Game game={game} gameId={gameId ?? ''} lobbyId={lobbyId ?? ''} settings={settings} observer={!activeLobby.isActivePlayer(user.userDocId)} setGameId={setGameId} />;
+        return <GamePage game={game} gameId={gameId ?? ''} lobbyId={lobbyId ?? ''} settings={settings} observer={!activeLobby.isActivePlayer(user.userDocId)} setGameId={setGameId} />;
       }
     }
   };

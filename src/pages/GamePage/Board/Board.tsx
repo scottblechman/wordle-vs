@@ -1,4 +1,4 @@
-import Settings from '../../types/Settings';
+import Settings from '../../../types/Settings';
 import Row from '../Row/Row';
 
 import './Board.css';
